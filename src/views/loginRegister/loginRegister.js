@@ -30,7 +30,7 @@ loginForm.addEventListener('submit', async (e) => {
   try {
     const userInfo = await axios.post('http://localhost:4000/user/login', data);
     localStorage.setItem('token', userInfo.data.token);
-   // window.location.href = "../homePage/homePage.html";
+    window.location.href = "../homePage/homePage.html";
 
     loginForm.reset(); 
   } catch (error) {
