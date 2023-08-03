@@ -9,14 +9,14 @@
   <div class="container mt-5">
     <h1 class="text-center">ChatApp</h1>
     <div class="messages mt-4">
-      <p><strong>User1:</strong> Hello, how are you?</p>
+      <!-- <p><strong>User1:</strong> Hello, how are you?</p>
       <p><strong>User2:</strong> Hi! I'm good, thanks.</p>
-      <p><strong>User3:</strong> Hey, what's up?</p>
+      <p><strong>User3:</strong> Hey, what's up?</p> -->
     </div>
     <div class="input-group mt-4">
-      <input type="text" class="form-control" placeholder="Type your message...">
+      <input type="text" class="form-control" placeholder="Type your message..." id="message">
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button">Send</button>
+        <button class="btn btn-primary" type="button" id="sendMessage">Send</button>
       </div>
     </div>
   </div>
@@ -25,5 +25,7 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+  <script src="./homePage.js"></script>
 </body>
 </html>

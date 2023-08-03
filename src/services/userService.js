@@ -46,6 +46,10 @@ class UserServices {
         return result;
     }
 
+    async userChats(userId,message,name){
+        return userRepo.saveMessage(userId,message,name);
+    }
+
 }
 
 
