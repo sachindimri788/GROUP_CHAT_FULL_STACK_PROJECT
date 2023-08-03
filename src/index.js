@@ -10,7 +10,11 @@ require('../config/db');
 const port = process.env.PORT || 3000;
 
 
-app.use(cors());
+app.use(cors({
+  // origin:"http://127.0.0.1:5500",     it allows only this url
+  // methods:['GET','POST','PUT'],       it allows these types of request
+  // credentials: true,                   for cookies because bydefault cookies are blocked
+}));
 app.use('/', router);
 
 
