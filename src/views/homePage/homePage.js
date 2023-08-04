@@ -35,7 +35,7 @@ async function showChats() {
         data.forEach(element => {
             const paragraphElement = document.createElement('p');
             const strongElement = document.createElement('strong');
-            const textNodeUser = document.createTextNode(`${element.name}`);
+            const textNodeUser = document.createTextNode(`${element.name} : `);
             const textNodeMessage = document.createTextNode(`${element.message}`);
 
             strongElement.appendChild(textNodeUser);
@@ -52,5 +52,8 @@ async function showChats() {
         }
     }
 }
+setInterval(() => {
+    showChats();
+}, 1000);
 
 showChats();
