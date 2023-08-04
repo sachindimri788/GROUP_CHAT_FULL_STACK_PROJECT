@@ -50,8 +50,8 @@ class UserServices {
         return userRepo.saveMessage(userId,message,name);
     }
 
-    async getChats(){
-        return await userRepo.getAllChats();
+    async getChats(id){
+        return await userRepo.getAllChats(id);
     }
 
 }

@@ -5,8 +5,8 @@ sequelize.options.logging = false;
 
 const Chat = sequelize.define("chats", {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },

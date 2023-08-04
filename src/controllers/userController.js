@@ -42,7 +42,8 @@ exports.userChats = async (req, res) => {
 
 exports.getChats=async(req,res)=>{
     try {
-        const result=await userServices.getChats();
+        const id=req.query.id;
+        const result=await userServices.getChats(id);
         return res.status(200).json(result)
     } catch (error) {
         console.log(error)

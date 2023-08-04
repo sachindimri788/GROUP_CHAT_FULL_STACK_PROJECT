@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Chat = require('../models/chatModel');
 const User = require('../models/userModel');
 
@@ -19,8 +20,8 @@ class UserRepo {
         return await Chat.create({message,userId,name})
     }
 
-    async getAllChats(){
-        return await Chat.findAll({attributes:["message","name"],order: [['createdAt', 'ASC']]});
+    async getAllChats(id){
+        return await Chat.findAll({where: { id: { [Op.gt]: id } },attributes:["message","name","id","userId"],order: [['createdAt', 'ASC']]});
     }
 }
 
