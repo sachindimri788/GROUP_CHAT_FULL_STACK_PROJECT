@@ -8,6 +8,6 @@ router.post('/register', userController.userRegister);
 router.post('/login',userController.userLogin);
 
 router.post('/chats',verifyToken,userController.userChats);
-
+router.get('/chats',verifyToken,userController.getChats)
 
 module.exports = router;

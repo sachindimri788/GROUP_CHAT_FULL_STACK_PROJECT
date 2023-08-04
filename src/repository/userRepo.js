@@ -18,6 +18,10 @@ class UserRepo {
     async saveMessage(userId,message,name){
         return await Chat.create({message,userId,name})
     }
+
+    async getAllChats(){
+        return await Chat.findAll({attributes:["message","name"],order: [['createdAt', 'ASC']]});
+    }
 }
 
 module.exports = UserRepo;

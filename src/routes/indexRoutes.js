@@ -8,7 +8,7 @@ const userRoutes = require('./userRoutes');
 router.use('/user', userRoutes);
 
 router.use('/', (req, res) => {
-    res.sendFile(path.join(__dirname, `../views/${req.url}`))
+        res.sendFile(path.join(__dirname, `../views/${req.url}`))
 })
 
 module.exports = router;

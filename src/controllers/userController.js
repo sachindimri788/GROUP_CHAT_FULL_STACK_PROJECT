@@ -38,3 +38,14 @@ exports.userChats = async (req, res) => {
         return res.status(500).json({ message: "failed" });
     }
 }
+
+
+exports.getChats=async(req,res)=>{
+    try {
+        const result=await userServices.getChats();
+        return res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "failed" });
+    }
+}
