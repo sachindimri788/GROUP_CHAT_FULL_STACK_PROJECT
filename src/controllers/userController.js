@@ -25,28 +25,3 @@ exports.userLogin = async (req, res) => {
         return res.status(500).json({ message: "failed" });
     }
 }
-
-exports.userChats = async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const name=res.locals.user.name;
-        const { message } = req.body;
-        await userServices.userChats(userId, message,name);
-        return res.status(200).json({ message: "success" })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "failed" });
-    }
-}
-
-
-exports.getChats=async(req,res)=>{
-    try {
-        const id=req.query.id;
-        const result=await userServices.getChats(id);
-        return res.status(200).json(result)
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "failed" });
-    }
-}

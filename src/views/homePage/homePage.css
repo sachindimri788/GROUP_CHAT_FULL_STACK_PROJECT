@@ -1,0 +1,14 @@
+.message-container {
+      max-height: 400px;
+      /* Set the maximum height for the messages container */
+      overflow-y: auto;
+      /* Enable vertical scrolling */
+    }
+    #groups{
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    #users{
+      max-height: 200px;
+      overflow-y: auto;
+    }

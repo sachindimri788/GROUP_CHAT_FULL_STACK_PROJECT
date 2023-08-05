@@ -45,15 +45,6 @@ class UserServices {
         }
         return result;
     }
-
-    async userChats(userId,message,name){
-        return userRepo.saveMessage(userId,message,name);
-    }
-
-    async getChats(id){
-        return await userRepo.getAllChats(id);
-    }
-
 }
 
 

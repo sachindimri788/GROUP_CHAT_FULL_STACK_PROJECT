@@ -1,38 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Group Chat App</title>
-  <!-- Add Bootstrap CSS link -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="./homePage.css">
 </head>
+
 <body>
   <div class="container mt-5">
     <h1 class="text-center">ChatApp</h1>
 
-    <div>
-      <div id="messageDivOther" style="text-align: left;">
-        <!-- <p><strong>User1:</strong> Hello, how are you?</p> -->
-      </div>
-      <div id="messageDivMe" style="text-align: right;">
-        <!-- <p><strong>User2:</strong> Hi! I'm good, thanks.</p> -->
-      </div>
-    </div>
-  
+    <!-- Group List on the Left Side -->
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Groups</h2>
+        <!-------------------- Group ------------------------->
+        <ul id="groups" class="list-group">
+          <!-- Dynamically add group names here -->
+          <!-- <li class="list-group-item"><button>Group 1</button> <button>Delete</button><button>View Member</button> <button >Delete Member</button><button>Add Member</button></li>-->
+        </ul>
+        <button class="btn btn-primary mt-3" id="createGroupBtn">Create New Group</button>
+        <!-------------------- Group End ------------------------->
+        <br><br>
+        <!-------------------- user -------------------------------->
+        <h3>Show User In Grop</h3>
+        <ul id="users" class="list-group">
+          <!-- Dynamically add group names here -->
+          <!-- <li class="list-group-item">user2</li>
+          <li class="list-group-item">user2 </li> -->
+        </ul>
+        <!-------------------- User End ------------------------->
 
-    <div class="input-group mt-4">
-      <input type="text" class="form-control" placeholder="Type your message..." id="message">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" id="sendMessage">Send</button>
+      </div>
+
+
+
+      <!-- Messages Section on the Right Side -->
+      <div class="col-md-8" id="msg">
+        <!-- <h2 id="gpName">${groupName}</h2>
+        <div class="message-container">
+          <div id="messageDiv" class="list-group">
+             <div style="text-align: right;"> <p><strong>You : </strong> message </p> </div>
+            <div style="text-align: left;"> <p><strong>user1 : </strong> message</p> </div> 
+          </div>
+        </div>
+        <div class="input-group mt-4">
+          <input type="text" class="form-control" placeholder="Type your message..." id="message">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="sendMessage"
+              onclick="sendMessage('${groupId}', '${groupName}')">Send</button>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
 
   <!-- Add Bootstrap JS and jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
   <script src="./homePage.js"></script>
 </body>
+
 </html>

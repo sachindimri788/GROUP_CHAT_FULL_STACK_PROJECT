@@ -1,7 +1,8 @@
 const { Op } = require('sequelize');
 const Chat = require('../models/chatModel');
 const User = require('../models/userModel');
-
+const Group = require('../models/groupModel');
+const UserGroup = require('../models/usergroupsModel');
 class UserRepo {
     async userRegister(user, hash) {
         return await User.create({ ...user, password: hash });
@@ -16,12 +17,68 @@ class UserRepo {
         return await User.findOne({ where: { email } });
     }
 
-    async saveMessage(userId,message,name){
-        return await Chat.create({message,userId,name})
+    async saveMessage(userId, message, name,groupId) {
+        return await Chat.create({ message, userId, name,groupId })
     }
 
-    async getAllChats(id){
-        return await Chat.findAll({where: { id: { [Op.gt]: id } },attributes:["message","name","id","userId"],order: [['createdAt', 'ASC']]});
+    async getAllChats(id,groupId) {
+        return await Chat.findAll({
+            where: {
+              id: { [Op.gt]: id },
+              groupId: groupId, 
+            },
+            attributes: ["message", "name", "id", "userId", "groupId"],
+            order: [['createdAt', 'ASC']],
+          });    
+    }
+
+    async createGroup(groupName) {
+        return await Group.create({ groupName });
+    }
+
+    async createUserGroup(userId, groupId) {
+        return await UserGroup.create({ userId, groupId, isAdmin: true });
+    }
+
+    async showGroup(userId) {
+        return await UserGroup.findAll({
+            where: { userId },
+            attributes: ["groupId"],
+            include: [{ model: Group, attributes: ["groupName"] }]
+        });
+    }
+
+    async isAdmin(userId, groupId) {
+        const isAdmin = await UserGroup.findOne({ where: { groupId, userId } });
+        return isAdmin.dataValues.isAdmin;
+    }
+    async deleteUserGroup(groupId) {
+        return await UserGroup.destroy({ where: { groupId } })
+    }
+    async deleteGroup(id) {
+        return await Group.destroy({ where: { id } })
+    }
+    async getmemberIdFromEmail(email) {
+        return await User.findOne({ where: { email }, attributes: ["id"] })
+    }
+    async isMemberAlreadyExist(userId, groupId) {
+        return await UserGroup.findOne({ where:{userId, groupId} });
+    }
+    async addMemberUserGroup(userId, groupId) {
+        return await UserGroup.create({ userId, groupId });
+    }
+    async deleteMemberUserGroup(userId, groupId) {
+        return await UserGroup.destroy({ where: { userId, groupId } });
+    }
+    async addAdmin(userId, groupId) {
+        return await UserGroup.update(
+            { isAdmin: true },
+            { where: { userId, groupId } }
+        );
+    }
+    async showUserInGroup(groupId){
+        return await UserGroup.findAll({where:{groupId},include:[{model:User,attributes:["name"]}]})
+        
     }
 }
 

@@ -6,9 +6,28 @@ const cors = require('cors');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-require('../config/db');
+const sequelize = require("../config/db");
 const port = process.env.PORT || 3000;
 
+//models
+const User = require("./models/userModel");
+const Chat = require("./models/chatModel");
+const Group = require("./models/groupModel");
+const UserGroup = require("./models/usergroupsModel");
+
+//Relationships between Tables
+User.hasMany(Chat, { onDelete: "CASCADE", hooks: true });
+
+Chat.belongsTo(User);
+Chat.belongsTo(Group);
+
+User.hasMany(UserGroup);
+
+Group.hasMany(Chat);
+Group.hasMany(UserGroup);
+
+UserGroup.belongsTo(User);
+UserGroup.belongsTo(Group);
 
 app.use(cors({
   // origin:"http://127.0.0.1:5500",     it allows only this url
@@ -18,6 +37,9 @@ app.use(cors({
 app.use('/', router);
 
 
-app.listen(port, () => {
-  console.log(`listening at port number ${port}`);
-});
+sequelize
+  .sync()
+  .then((result) => {
+    app.listen(port,()=>{console.log(`listening at port ${port}`)});
+  })
+  .catch((err) => console.log(err));
