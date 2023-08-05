@@ -23,8 +23,10 @@ async function saveChat(groupId, groupName) {
         var nextData = 0;
         const token = localStorage.getItem('token')
         const localStorageChats = JSON.parse(localStorage.getItem("chats"));
-        const chatsWithMatchingGroupId = await localStorageChats.filter((chat) => chat.groupId == groupId);
-
+        let chatsWithMatchingGroupId;
+        if(localStorageChats!==null){
+           chatsWithMatchingGroupId = await localStorageChats.filter((chat) => chat.groupId == groupId);
+        }
         if (chatsWithMatchingGroupId && chatsWithMatchingGroupId.length > 0) {
             let length = chatsWithMatchingGroupId.length;
             nextData = chatsWithMatchingGroupId[length - 1].id;
@@ -85,7 +87,11 @@ async function showChats(groupId, groupName) {
         const decodedToken = decodeToken(token);
         const userId = decodedToken.user.userId;
         const chats = JSON.parse(localStorage.getItem('chats'));
-        const data = await chats.filter((chat) => chat.groupId == groupId);
+        let data;
+        if(chats!==null){
+            data = await chats.filter((chat) => chat.groupId == groupId);
+        }
+        
         let content = "";
         if (data && data.length > 0) {
             for (let i = 0; i < data.length; i++) {
@@ -255,3 +261,17 @@ async function makeAdmin(id) {
 }
 
 showGroup();
+
+
+
+
+
+
+//-----------------------logout--------------------//
+const logoutButton = document.getElementById("logoutBtn");
+logoutButton.addEventListener("click", () => {
+  localStorage.clear();
+  window.location.href = '../loginRegister/loginRegister.html';
+  window.location.reload();
+});
+//-----------------------logout--------------------//
