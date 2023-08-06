@@ -1,3 +1,5 @@
+const socket = io("http://localhost:5000");
+
 async function sendMessage(groupId, groupName) {
     try {
         const token = localStorage.getItem('token')
@@ -8,7 +10,7 @@ async function sendMessage(groupId, groupName) {
             headers: { Authorization: `Bearer ${token}` }
         });
         message.value = "";
-        saveChat(groupId, groupName);
+        showChats(groupId, groupName);
     } catch (error) {
         if (error.response && error.response.status === 403) {
             window.location.href = '../loginRegister/loginRegister.html';
@@ -18,54 +20,54 @@ async function sendMessage(groupId, groupName) {
     }
 }
 
-async function saveChat(groupId, groupName) {
-    try {
-        var nextData = 0;
-        const token = localStorage.getItem('token')
-        const localStorageChats = JSON.parse(localStorage.getItem("chats"));
-        let chatsWithMatchingGroupId;
-        if(localStorageChats!==null){
-           chatsWithMatchingGroupId = await localStorageChats.filter((chat) => chat.groupId == groupId);
-        }
-        if (chatsWithMatchingGroupId && chatsWithMatchingGroupId.length > 0) {
-            let length = chatsWithMatchingGroupId.length;
-            nextData = chatsWithMatchingGroupId[length - 1].id;
-        }
-        const res = await axios.get('http://localhost:4000/group/chats', {
-            params: { id: nextData, groupId },
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        const chats = JSON.parse(localStorage.getItem("chats"));
-        if (!chats) {
-            localStorage.setItem("chats", JSON.stringify(res.data));
-        } else {
-            res.data.forEach((message) => {
-                chats.push(message);
-                localStorage.setItem("chats", JSON.stringify(chats));
-            });
-        }
-        showChats(groupId, groupName);
-    } catch (error) {
-        console.log(error)
-    }
-}
+// async function saveChat(groupId, groupName) {
+//     try {
+//         var nextData = 0;
+//         const token = localStorage.getItem('token')
+//         const localStorageChats = JSON.parse(localStorage.getItem("chats"));
+//         let chatsWithMatchingGroupId;
+//         if(localStorageChats!==null){
+//            chatsWithMatchingGroupId = await localStorageChats.filter((chat) => chat.groupId == groupId);
+//         }
+//         if (chatsWithMatchingGroupId && chatsWithMatchingGroupId.length > 0) {
+//             let length = chatsWithMatchingGroupId.length;
+//             nextData = chatsWithMatchingGroupId[length - 1].id;
+//         }
+//         const res = await axios.get('http://localhost:4000/group/chats', {
+//             params: { id: nextData, groupId },
+//             headers: { Authorization: `Bearer ${token}` }
+//         });
+//         const chats = JSON.parse(localStorage.getItem("chats"));
+//         if (!chats) {
+//             localStorage.setItem("chats", JSON.stringify(res.data));
+//         } else {
+//             res.data.forEach((message) => {
+//                 chats.push(message);
+//                 localStorage.setItem("chats", JSON.stringify(chats));
+//             });
+//         }
+//         showChats(groupId, groupName);
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 async function showChats(groupId, groupName) {
     try {
         const token = localStorage.getItem('token');
-        //shows user 
-            const user=await axios.get('http://localhost:4000/group/showUserInGroup', {
-                params: { groupId },
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            let users=document.getElementById('users');
-            users.innerHTML="";
-            let conte=""
-            for (let i = 0; i < user.data.length; i++) {
-                conte +=` <li class="list-group-item">${user.data[i].name}</li>`
-            }
-            users.innerHTML=conte;
-
+        //shows user //
+        const user = await axios.get('http://localhost:4000/group/showUserInGroup', {
+            params: { groupId },
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        let users = document.getElementById('users');
+        users.innerHTML = "";
+        let conte = ""
+        for (let i = 0; i < user.data.length; i++) {
+            conte += ` <li class="list-group-item">${user.data[i].name}</li>`
+        }
+        users.innerHTML = conte;
+        //shows user end //    
 
         const msg = document.getElementById('msg');
         msg.innerHTML = `
@@ -86,24 +88,26 @@ async function showChats(groupId, groupName) {
         messageDiv.innerHTML = "";
         const decodedToken = decodeToken(token);
         const userId = decodedToken.user.userId;
-        const chats = JSON.parse(localStorage.getItem('chats'));
-        let data;
-        if(chats!==null){
-            data = await chats.filter((chat) => chat.groupId == groupId);
-        }
-        
-        let content = "";
-        if (data && data.length > 0) {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].userId === userId) {
-                    content += `<div style="text-align: right;"> <p><strong>You : </strong> ${data[i].message}</p> </div>`
+        // const chats = JSON.parse(localStorage.getItem('chats'));
+        // let data;
+        // if(chats!==null){
+        //     data = await chats.filter((chat) => chat.groupId == groupId);
+        // }
+        socket.emit("getMessages", groupId);
+        socket.on("messages", (data) => {
+            let content = "";
+            if (data && data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].userId === userId) {
+                        content += `<div style="text-align: right;"> <p><strong>You : </strong> ${data[i].message}</p> </div>`
+                    }
+                    else {
+                        content += `<div style="text-align: left;"> <p><strong>${data[i].name} : </strong> ${data[i].message}</p> </div>`
+                    }
                 }
-                else {
-                    content += `<div style="text-align: left;"> <p><strong>${data[i].name} : </strong> ${data[i].message}</p> </div>`
-                }
+                messageDiv.innerHTML = content;
             }
-            messageDiv.innerHTML = content;
-        }
+        });
     } catch (error) {
         if (error.response && error.response.status === 403) {
             window.location.href = '../loginRegister/loginRegister.html';
@@ -111,6 +115,7 @@ async function showChats(groupId, groupName) {
             console.log(error);
         }
     }
+
 }
 // setInterval(() => {
 //     saveChat();
@@ -123,7 +128,7 @@ function decodeToken(token) {
         return payload;
     } catch (error) {
         console.error('Error decoding token:', error.message);
-        return null; // Return null or handle the error in your application.
+        return null;
     }
 }
 
@@ -168,7 +173,7 @@ async function showGroup() {
         let content = "";
         for (let i = 0; i < data.length; i++) {
             content += `<li class="list-group-item">
-            <button style="background:red" onclick="saveChat('${data[i].groupId}', '${data[i].groupName}')">${data[i].groupName}</button>
+            <button style="background:red" onclick="showChats('${data[i].groupId}', '${data[i].groupName}')">${data[i].groupName}</button>
 
            <button onclick="deleteGroup(${data[i].groupId})">Delete</button>
 
@@ -270,8 +275,8 @@ showGroup();
 //-----------------------logout--------------------//
 const logoutButton = document.getElementById("logoutBtn");
 logoutButton.addEventListener("click", () => {
-  localStorage.clear();
-  window.location.href = '../loginRegister/loginRegister.html';
-  window.location.reload();
+    localStorage.clear();
+    window.location.href = '../loginRegister/loginRegister.html';
+    window.location.reload();
 });
 //-----------------------logout--------------------//

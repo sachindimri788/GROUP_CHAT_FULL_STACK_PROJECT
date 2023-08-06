@@ -21,16 +21,16 @@ class UserRepo {
         return await Chat.create({ message, userId, name,groupId })
     }
 
-    async getAllChats(id,groupId) {
-        return await Chat.findAll({
-            where: {
-              id: { [Op.gt]: id },
-              groupId: groupId, 
-            },
-            attributes: ["message", "name", "id", "userId", "groupId"],
-            order: [['createdAt', 'ASC']],
-          });    
-    }
+    // async getAllChats(id,groupId) {
+    //     return await Chat.findAll({
+    //         where: {
+    //           id: { [Op.gt]: id },
+    //           groupId: groupId, 
+    //         },
+    //         attributes: ["message", "name", "id", "userId", "groupId"],
+    //         order: [['createdAt', 'ASC']],
+    //       });    
+    // }
 
     async createGroup(groupName) {
         return await Group.create({ groupName });

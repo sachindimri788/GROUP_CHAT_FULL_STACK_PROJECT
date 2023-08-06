@@ -5,7 +5,7 @@ const { verifyToken } = require('../util/auth');
 const router = express.Router();
 
 router.post('/chats',verifyToken,groupController.userChats);
-router.get('/chats',verifyToken,groupController.getChats)
+//router.get('/chats',verifyToken,groupController.getChats)
 
 
 router.post('/createGroup',verifyToken,groupController.createGroup)

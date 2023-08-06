@@ -4,9 +4,9 @@ class GroupServices {
     async userChats(userId, message, name, groupId) {
         return userRepo.saveMessage(userId, message, name, groupId);
     }
-    async getChats(id, groupId) {
-        return await userRepo.getAllChats(id, groupId);
-    }
+    // async getChats(id, groupId) {
+    //     return await userRepo.getAllChats(id, groupId);
+    // }
     async createGroup(groupName, userId) {
         const group = await userRepo.createGroup(groupName);
         return await userRepo.createUserGroup(userId, group.dataValues.id);
