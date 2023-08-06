@@ -5,11 +5,17 @@ async function sendMessage(groupId, groupName) {
         const token = localStorage.getItem('token')
         const message = document.getElementById('message');
         const messageInput = message.value;
-        console.log(messageInput)
-        await axios.post('http://localhost:4000/group/chats', { message: messageInput, groupId }, {
-            headers: { Authorization: `Bearer ${token}` }
+        const fileI = document.getElementById('fileInput');
+        const fileInput = fileI.files[0];;
+        const formData = new FormData();
+        formData.append('message', messageInput);
+        formData.append('fileInput', fileInput);
+        formData.append('groupId', groupId)
+        await axios.post('http://localhost:4000/group/chats', formData, {
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data', }
         });
         message.value = "";
+        fileI.value = "";
         showChats(groupId, groupName);
     } catch (error) {
         if (error.response && error.response.status === 403) {
@@ -79,6 +85,7 @@ async function showChats(groupId, groupName) {
             </div>
             </div>
             <div class="input-group mt-4">
+            <input type="file" id="fileInput" class="form-control">
             <input type="text" class="form-control" placeholder="Type your message..." id="message">
             <div class="input-group-append">
             <button class="btn btn-primary" type="button" id="sendMessage" onclick="sendMessage('${groupId}', '${groupName}')">Send</button>
@@ -98,16 +105,18 @@ async function showChats(groupId, groupName) {
             let content = "";
             if (data && data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].userId === userId) {
-                        content += `<div style="text-align: right;"> <p><strong>You : </strong> ${data[i].message}</p> </div>`
-                    }
-                    else {
-                        content += `<div style="text-align: left;"> <p><strong>${data[i].name} : </strong> ${data[i].message}</p> </div>`
+                    if (data[i].userId == userId) {
+                        if (data[i].message) { content += `<div style="text-align: right;"> <p><strong>You : </strong> ${data[i].message}</p> </div>`; }
+                        if (data[i].fileUrl) { content += `<div style="text-align: right;"><img src="../public/images/${data[i].fileUrl}" style="max-width: 300px;" /></div>`; }
+                    } else {
+                        if (data[i].fileUrl) { content += `<div style="text-align: left;"><img src="../public/images/${data[i].fileUrl}" style="max-width: 300px;" /></div>`; }
+                        if (data[i].message) { content += `<div style="text-align: left;"> <p><strong>${data[i].name} : </strong> ${data[i].message}</p> </div>`; }
                     }
                 }
                 messageDiv.innerHTML = content;
             }
         });
+
     } catch (error) {
         if (error.response && error.response.status === 403) {
             window.location.href = '../loginRegister/loginRegister.html';

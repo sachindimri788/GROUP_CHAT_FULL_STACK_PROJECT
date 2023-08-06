@@ -1,8 +1,8 @@
 const UserRepo = require('../repository/userRepo');
 const userRepo = new UserRepo();
 class GroupServices {
-    async userChats(userId, message, name, groupId) {
-        return userRepo.saveMessage(userId, message, name, groupId);
+    async userChats(userId, message, name, groupId,uploadfile) {
+        return userRepo.saveMessage(userId, message, name, groupId,uploadfile);
     }
     // async getChats(id, groupId) {
     //     return await userRepo.getAllChats(id, groupId);

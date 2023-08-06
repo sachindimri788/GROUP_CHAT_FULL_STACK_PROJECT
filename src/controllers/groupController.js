@@ -4,18 +4,24 @@ require('dotenv').config({ path: './env/development.env' })
 const Chat = require('../models/chatModel');
 
 exports.userChats = async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const name = res.locals.user.name;
-        const { message, groupId } = req.body;
-        await groupServices.userChats(userId, message, name, groupId);
-        return res.status(200).json({ message: "success" })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "failed" });
-    }
-}
+  try {
+    const message = req.body.message;
+    const uploadfile = req.file ? req.file.filename : "";
+    const userId = res.locals.userId;
+    const name = res.locals.user.name;
+    const { groupId } = req.body;
 
+    await groupServices.userChats(userId, message, name, groupId,uploadfile);
+
+    return res.status(200).json({ message: "success" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "internal error" });
+  }
+};
+
+
+///////////////////////////////////////// SOCKET.IO ////////////////////////////////////////////////////////////
 const io = require("socket.io")(5000, {
     cors: {
         // origin:["http://127.0.0.1:5500"],
@@ -26,17 +32,19 @@ io.on("connection", (socket) => {
         try {
             const data = await Chat.findAll({
                 where: {
-                  groupId, 
+                    groupId,
                 },
-                attributes: ["message", "name", "id", "userId", "groupId"],
+                attributes: ["message", "name", "id", "userId", "groupId","fileUrl",],
                 order: [['createdAt', 'ASC']],
-              });    
+            });
             io.emit("messages", data);
         } catch (error) {
             console.log(error);
         }
     });
 });
+///////////////////////////////////////// SOCKET.IO ENDS ////////////////////////////////////////////////////////////
+
 
 // exports.getChats=async(req,res)=>{
 //     try {

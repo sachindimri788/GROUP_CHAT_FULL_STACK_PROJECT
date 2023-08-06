@@ -17,8 +17,8 @@ class UserRepo {
         return await User.findOne({ where: { email } });
     }
 
-    async saveMessage(userId, message, name,groupId) {
-        return await Chat.create({ message, userId, name,groupId })
+    async saveMessage(userId, message, name,groupId,uploadfile) {
+        return await Chat.create({ message, userId, name,groupId ,fileUrl:uploadfile})
     }
 
     // async getAllChats(id,groupId) {

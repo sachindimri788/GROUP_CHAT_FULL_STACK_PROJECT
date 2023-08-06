@@ -1,10 +1,11 @@
 const express = require('express');
 const groupController = require('../controllers/groupController');
 const { verifyToken } = require('../util/auth');
+const { multerupload } = require('../util/middleware');
 
 const router = express.Router();
 
-router.post('/chats',verifyToken,groupController.userChats);
+router.post('/chats',verifyToken, multerupload().single('fileInput'),groupController.userChats);
 //router.get('/chats',verifyToken,groupController.getChats)
 
 
