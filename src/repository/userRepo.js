@@ -3,6 +3,7 @@ const Chat = require('../models/chatModel');
 const User = require('../models/userModel');
 const Group = require('../models/groupModel');
 const UserGroup = require('../models/usergroupsModel');
+const ArchivedChat = require('../models/archivedchatModel');
 class UserRepo {
     async userRegister(user, hash) {
         return await User.create({ ...user, password: hash });
@@ -31,6 +32,10 @@ class UserRepo {
     //         order: [['createdAt', 'ASC']],
     //       });    
     // }
+    async archivedChat(groupId) {
+        return ArchivedChat.findAll({where:{groupId}});
+    }
+    
 
     async createGroup(groupName) {
         return await Group.create({ groupName });

@@ -79,6 +79,9 @@ async function showChats(groupId, groupName) {
         msg.innerHTML = `
             <h2 id="gpName">${groupName}</h2>
             <div class="message-container">
+            <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); ">
+            <button class="btn btn-primary" type="button" onclick="archivedChatButton(${groupId})">Archived Chat</button>
+            </div> <br> <br> <br> <br>
             <div id="messageDiv" class="list-group">
             <!-- <div style="text-align: right;"> <p><strong>You : </strong> message </p> </div> -->
             <!-- <div style="text-align: left;"> <p><strong>user1 : </strong> message</p> </div> -->
@@ -126,6 +129,35 @@ async function showChats(groupId, groupName) {
     }
 
 }
+async function archivedChatButton(groupId) {
+    try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get('http://localhost:4000/group/archivedChat', {
+            params:  {groupId} ,
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data=res.data;
+        let content = "";
+        const messageDiv = document.getElementById('messageDiv');
+        messageDiv.innerHTML = "";
+        if (data && data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].userId == userId) {
+                    if (data[i].message) { content += `<div style="text-align: right;"> <p><strong>You : </strong> ${data[i].message}</p> </div>`; }
+                    if (data[i].fileUrl) { content += `<div style="text-align: right;"><img src="../public/images/${data[i].fileUrl}" style="max-width: 300px;" /></div>`; }
+                } else {
+                    if (data[i].fileUrl) { content += `<div style="text-align: left;"><img src="../public/images/${data[i].fileUrl}" style="max-width: 300px;" /></div>`; }
+                    if (data[i].message) { content += `<div style="text-align: left;"> <p><strong>${data[i].name} : </strong> ${data[i].message}</p> </div>`; }
+                }
+            }
+            messageDiv.innerHTML = content;
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 // setInterval(() => {
 //     saveChat();
 // }, 3000);

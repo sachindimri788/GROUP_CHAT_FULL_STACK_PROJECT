@@ -37,6 +37,9 @@ app.use(cors({
 app.use('/', router);
 
 
+let archivedchat = require("./jobs/cron");
+archivedchat.start();
+
 sequelize
   .sync()
   .then((result) => {

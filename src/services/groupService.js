@@ -4,6 +4,10 @@ class GroupServices {
     async userChats(userId, message, name, groupId,uploadfile) {
         return userRepo.saveMessage(userId, message, name, groupId,uploadfile);
     }
+    
+    async archivedChat(groupId) {
+        return userRepo.archivedChat(groupId);
+    }
     // async getChats(id, groupId) {
     //     return await userRepo.getAllChats(id, groupId);
     // }

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/chats',verifyToken, multerupload().single('fileInput'),groupController.userChats);
 //router.get('/chats',verifyToken,groupController.getChats)
-
+router.get('/archivedChat',verifyToken,groupController.archivedChat);
 
 router.post('/createGroup',verifyToken,groupController.createGroup)
 router.get('/showGroup',verifyToken,groupController.showGroup)

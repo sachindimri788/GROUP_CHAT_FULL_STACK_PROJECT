@@ -17,3 +17,23 @@
       top: 10px;
       right: 10px;
     }
+    .message-container {
+      position: relative;
+    }
+    
+    .older-messages-container {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      background-color: #fff; /* Optional: Add background color for better visibility */
+      padding: 10px;
+    }
+    
+    /* Style the "Load Older Messages" button as needed */
+    .older-messages-container button {
+      display: block;
+      margin: 0 auto;
+    }
+    

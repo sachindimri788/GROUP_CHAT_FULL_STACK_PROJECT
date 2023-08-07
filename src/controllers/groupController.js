@@ -2,7 +2,6 @@ const GroupServices = require('../services/groupService');
 const groupServices = new GroupServices();
 require('dotenv').config({ path: './env/development.env' })
 const Chat = require('../models/chatModel');
-
 exports.userChats = async (req, res) => {
   try {
     const message = req.body.message;
@@ -19,6 +18,17 @@ exports.userChats = async (req, res) => {
     res.status(500).json({ message: "internal error" });
   }
 };
+
+
+exports.archivedChat=async(req,res)=>{
+try {
+    const {groupId}=req.query;
+    const data =await groupServices.archivedChat(groupId) ;
+    return res.status(200).json(data);
+} catch (error) {
+    res.status(500).json({ message: "internal error" });
+}
+}
 
 
 ///////////////////////////////////////// SOCKET.IO ////////////////////////////////////////////////////////////
